@@ -18,7 +18,7 @@ int main(int argc, char const *argv[])
     char buf[128] = { 0 };
     while (1) {
         // 键盘输入到buf，写入buf到内核
-        printf("请选择 1.开灯 0.关灯\n");
+        printf("请选择 1.切换led1 2.切换led2 3.切换led3\n");
         fgets(buf, sizeof(buf), stdin);
         buf[strlen(buf) - 1] = '\0';
         write(fd, buf, sizeof(buf));

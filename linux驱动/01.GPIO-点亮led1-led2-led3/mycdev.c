@@ -143,15 +143,12 @@ ssize_t mycdev_write(struct file *file, const char __user *ubuf, size_t size, lo
     printk("%s:%s:%d\n", __FILE__, __func__, __LINE__);
 
     // LED亮灭逻辑
-    if (kbuf[0] == '1') { // 亮
-        (*vir_gpioe).odr |= (0x1 << 10);
-        (*vir_gpiof).odr |= (0x1 << 10);
-        (*vir_gpioe).odr |= (0x1 << 8);
-    } else if (kbuf[0] == '0') { // 灭
-        (*vir_gpioe).odr &= (~(0x1 << 10));
-        (*vir_gpiof).odr &= (~(0x1 << 10));
-        (*vir_gpioe).odr &= (~(0x1 << 8));
-    }
+    if (kbuf[0] == '1') // led1
+        (*vir_gpioe).odr ^= (0x1 << 10);
+    else if (kbuf[0] == '2') // led2
+        (*vir_gpiof).odr ^= (0x1 << 10);
+    else if (kbuf[0] == '3') // led3
+        (*vir_gpioe).odr ^= (0x1 << 8);
 
     return 0;
 }
