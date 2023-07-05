@@ -30,6 +30,4 @@ typedef struct {
 #define BEEP_ON   _IO('1', 1)
 #define BEEP_OFF  _IO('1', 2)
 
-#define PHY_GPIOE 0X50006000
-#define PHY_GPIOF 0X50007000
 #endif //_HEAD_H_

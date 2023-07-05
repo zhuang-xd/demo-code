@@ -16,7 +16,7 @@ int main(int argc, char const *argv[])
     int quit = 0;
 
     // 开
-    int led_fd = open("/dev/my_led0", O_RDWR);
+    int led_fd = open("/dev/led0", O_RDWR);
     if (led_fd < 0) {
         printf("打开LED设备文件夹失败\n");
         exit(-1);
@@ -65,16 +65,16 @@ int main(int argc, char const *argv[])
                 case 1:
                 case 2:
                 case 3:
-                    ioctl(led_fd, LED_ON, select_dev); // led
+                    ioctl(led_fd, LED_ON, &select_dev); // led（指针传递第三个参数：常用！）
                     break;
                 case 4:
-                    ioctl(fan_fd, FAN_ON, select_dev); // 风扇
+                    ioctl(fan_fd, FAN_ON); // 风扇 (不传递第三个参数)
                     break;
                 case 5:
-                    ioctl(motor_fd, MOTOR_ON, select_dev); // 马达
+                    ioctl(motor_fd, MOTOR_ON); // 马达
                     break;
                 case 6:
-                    ioctl(beep_fd, BEEP_ON, select_dev); // 蜂鸣器
+                    ioctl(beep_fd, BEEP_ON); // 蜂鸣器
                     break;
                 }
                 break;
@@ -83,16 +83,16 @@ int main(int argc, char const *argv[])
                 case 1:
                 case 2:
                 case 3:
-                    ioctl(led_fd, LED_OFF, select_dev); // led
+                    ioctl(led_fd, LED_OFF, &select_dev); // led
                     break;
                 case 4:
-                    ioctl(fan_fd, FAN_OFF, select_dev); // 风扇
+                    ioctl(fan_fd, FAN_OFF); // 风扇
                     break;
                 case 5:
-                    ioctl(motor_fd, MOTOR_OFF, select_dev); // 马达
+                    ioctl(motor_fd, MOTOR_OFF); // 马达
                     break;
                 case 6:
-                    ioctl(beep_fd, BEEP_OFF, select_dev); // 蜂鸣器
+                    ioctl(beep_fd, BEEP_OFF); // 蜂鸣器
                     break;
                 }
                 break;
