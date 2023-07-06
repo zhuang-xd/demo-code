@@ -30,3 +30,9 @@ arm-linux-gnueabihf-gcc main.c
 ```shell
 ./rmmod.sh
 ```
+
+
+
+## 分步注册驱动
+
+> 创建三个设备文件，每个设备文件和一个LED灯绑定，当操作这个设备文件时只能控制设备文件对应的这盏灯。
