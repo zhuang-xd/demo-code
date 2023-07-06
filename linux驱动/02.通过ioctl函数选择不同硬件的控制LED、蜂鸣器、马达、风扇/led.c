@@ -57,7 +57,7 @@ static int __init led_init(void)
     }
     printk("寄存器地址映射成功\n");
 
-    // 初始化湖村桥
+    // 初始化寄存器
     all_led_init();
     printk("寄存器初始化成功\n");
 
