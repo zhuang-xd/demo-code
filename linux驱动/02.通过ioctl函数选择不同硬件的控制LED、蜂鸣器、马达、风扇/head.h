@@ -21,13 +21,13 @@ typedef struct {
 #define PHY_BEEP_ADDR  0x50003000 // PB6
 
 // GPIO控制
-#define LED_ON    _IO('1', 1) // 1开 2关
-#define LED_OFF   _IO('1', 2)
-#define FAN_ON    _IO('1', 1)
-#define FAN_OFF   _IO('1', 2)
-#define MOTOR_ON  _IO('1', 1)
-#define MOTOR_OFF _IO('1', 2)
-#define BEEP_ON   _IO('1', 1)
-#define BEEP_OFF  _IO('1', 2)
+#define LED_ON    _IOW('l', 1, int) // 1开 2关
+#define LED_OFF   _IOW('l', 2, int)
+#define FAN_ON    _IO('f', 1)
+#define FAN_OFF   _IO('f', 2)
+#define MOTOR_ON  _IO('m', 1)
+#define MOTOR_OFF _IO('m', 2)
+#define BEEP_ON   _IO('b', 1)
+#define BEEP_OFF  _IO('b', 2)
 
 #endif //_HEAD_H_

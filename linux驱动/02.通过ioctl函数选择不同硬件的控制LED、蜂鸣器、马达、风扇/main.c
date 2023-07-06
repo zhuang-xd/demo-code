@@ -109,6 +109,8 @@ int main(int argc, char const *argv[])
     // 关
     close(led_fd);
     close(fan_fd);
+    close(motor_fd);
+    close(beep_fd);
 
     return 0;
 }
