@@ -13,7 +13,7 @@ static unsigned int *vir_rcc;
 
 struct cdev *cdev_ptr; // 字符设备驱动对象
 dev_t devno; // 设备号
-int major = 500; // 主设备号
+int major = 255; // 主设备号
 int minor = 0; // 次设备号
 struct class *cls_ptr; // 提交目录
 struct device *dev_prt; // 设备节点信息
@@ -25,19 +25,24 @@ static int __init led_init(void)
 {
     int ret;
     // 映射 LED 寄存器地址
-    if (!mapping_register())
-        printk("寄存器地址映射成功\n");
+    ret = mapping_register();
+    if (ret)
+        return ret;
+    printk("寄存器地址映射成功\n");
 
     // 初始化 LED 寄存器
-    if (!all_led_init())
-        printk("寄存器初始化成功\n");
+    ret = all_led_init();
+    if (ret)
+        return ret;
+    printk("寄存器初始化成功\n");
 
     // 分步注册设备驱动
     ret = step_regist();
-    if (!ret)
-        printk("分步注册设备驱动成功\n");
+    if (ret)
+        return ret;
+    printk("分步注册设备驱动成功\n");
 
-    return ret;
+    return 0;
 }
 
 /**
@@ -78,14 +83,26 @@ long led_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
     unsigned int dev_selected = (int)(file->private_data + 1);
 
     switch (dev_selected) {
-    case 1:
-        (*vir_led1).odr ^= (0x1 << 10);
+    case 1: // led1
+        if (cmd == LED_ON) {
+            (*vir_led1).odr |= (0x1 << 10);
+        } else if ( cmd == LED_OFF) {
+            (*vir_led1).odr &= (~(0x1 << 10));
+        }
         break;
-    case 2:
-        (*vir_led2).odr ^= (0x1 << 10);
+    case 2: // led2
+        if (cmd == LED_ON) {
+            (*vir_led2).odr |= (0x1 << 10);
+        } else if ( cmd == LED_OFF) {
+            (*vir_led2).odr &= (~(0x1 << 10));
+        }
         break;
-    case 3:
-        (*vir_led3).odr ^= (0x1 << 8);
+    case 3: // led3
+        if (cmd == LED_ON) {
+            (*vir_led3).odr |= (0x1 << 8);
+        } else if ( cmd == LED_OFF) {
+            (*vir_led3).odr &= (~(0x1 << 8));
+        }
         break;
     }
 

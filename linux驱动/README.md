@@ -34,3 +34,18 @@ make ARCH=arm MODNAME=beep
 ## 03.[分步注册驱动](https://github.com/zhuang-xd/demo-code/tree/master/linux%E9%A9%B1%E5%8A%A8/03.%20%E5%88%86%E6%AD%A5%E6%B3%A8%E5%86%8C%EF%BC%8C%E6%AF%8F%E4%B8%AA%E8%AE%BE%E5%A4%87%E6%96%87%E4%BB%B6%E6%8E%A7%E5%88%B6%E4%B8%80%E4%B8%AALED)
 
 > 创建三个设备文件，每个设备文件和一个LED灯绑定，当操作这个设备文件时只能控制设备文件对应的这盏灯。
+
+## 04. gpio子系统
+
+现象：安装完驱动后，led1亮起
+
+提示：
+
+1. 通过 `make dtb` 编译 `linux-stm32mp-5.10.61-stm32mp-r2-r0/linux-5.10.61/arch/arm/boot/dts`目录下的 `stm32mp157a-fsmp1a.dts`文件
+2. 设备树文件 `stm32mp15xx-fsmp1x.dtsi`
+3. 旧版api 驱动源文件 `my_led.c`
+4. 新版api 驱动源文件 `new_my_led.c`
+
+## 05. 定时器
+
+现象：![image-20230711154248847](assets/image-20230711154248847.png)

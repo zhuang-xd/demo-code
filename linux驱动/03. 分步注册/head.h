@@ -18,7 +18,7 @@ typedef struct {
 #define PHY_LED3_ADDR  0x50006000 // PE8
 
 // GPIO控制
-#define LED_ON    _IOW('l', 1, int) // 1开 2关
-#define LED_OFF   _IOW('l', 2, int)
+#define LED_ON    _IO('l', 1) // 1开 2关
+#define LED_OFF   _IO('l', 2)
 
 #endif //_HEAD_H_
