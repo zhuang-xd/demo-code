@@ -35,6 +35,30 @@ make ARCH=arm MODNAME=beep
 
 > 创建三个设备文件，每个设备文件和一个LED灯绑定，当操作这个设备文件时只能控制设备文件对应的这盏灯。
 
+```c
+/**
+ * 相关API
+ * #include <linux/cdev.h>
+ * #include <linux/fs.h>
+ * #include <linux/devices.h>
+ * 1. 分配字符设备驱动对象空间
+ *      struct cdev *cdev_alloc(void);
+ * 2. 字符设备驱动对象部分初始化
+ *      void cdev_init(struct cdev *, const struct file_operations *);
+ * 3. 申请设备号
+ *      静态 extern int register_chrdev_region(dev_t, unsigned, const char *);
+ *      动态 extern int alloc_chrdev_region(dev_t *, unsigned, unsigned, const char *);
+ * 4. 注册字符设备驱动对象
+ *      int cdev_add(struct cdev *, dev_t, unsigned);
+ * 5. 向上提交设备目录
+ *      class_create(owner, name)
+ * 6. 向上提交设备节点
+ *      device_create(struct class *cls, struct device *parent, dev_t devt, void *drvdata, const char *fmt, ...);
+*/
+```
+
+
+
 ## 04. gpio子系统
 
 现象：安装完驱动后，led1亮起
@@ -58,6 +82,30 @@ make ARCH=arm MODNAME=beep
 
 ## 07.中断子系统
 
-实验：通过设备树访问key1、key2、key3，按下按键时执行中断的回调函数
+实验：
 
-现象：![image-20230712141915609](assets\image-20230712141915609.png)
+- 通过设备树访问key1、key2、key3，按下按键时执行中断的回调函数
+
+现象：
+
+![image-20230712141915609](assets\image-20230712141915609.png)
+
+## 08.tasklet
+
+任务队列示例
+
+## 09.work
+
+工作队列示例
+
+## 10.中断综合练习
+
+实验
+
+- 修改设备树节点，通过GPIO子系统控制 led1 和 key1
+- 应用程序通过阻塞IO读取 内核中 led 驱动的 number 变量
+- 按下 key1 后 led1 亮灭状态切换，number值在0、1切换
+
+现象
+
+![image-20230712215231429](assets/image-20230712215231429.png)

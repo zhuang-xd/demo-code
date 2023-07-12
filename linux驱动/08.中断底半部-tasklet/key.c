@@ -1,24 +1,41 @@
 #include <linux/init.h>
-#include <linux/interrupt.h>
 #include <linux/module.h>
 #include <linux/of_irq.h>
+#include <linux/interrupt.h>
 /**
  * 相关API
  * #include <linux/interrupt.h>
- * #include <linux/of_irq.h>
- * 1. 解析设备树节点 (名字、路径、compatible)
- *      static inline struct device_node *of_find_node_by_name(struct device_node *from,const char *name)
- * 2. 从设备树节点中获取获取软中断号
- *      static inline unsigned int irq_of_parse_and_map(struct device_node *dev,int index)
- * 3. 注册中断号
- *      request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, const char *name, void *dev)
- * 4. 注销中断号
- *      extern const void *free_irq(unsigned int, void *);
+ * 1. 分配对象
+ *      struct tasklet_struct{}
+ * 2. 初始化对象
+ *      extern void tasklet_init(struct tasklet_struct *t, void (*func)(unsigned long), unsigned long data);
+ * 3. 设置一个任务队列
+ *      extern void tasklet_setup(struct tasklet_struct *t, void (*callback)(struct tasklet_struct *));
+ * 4. 注销任务队列
+ *      extern void tasklet_kill(struct tasklet_struct *t);
  */
 
 struct device_node *dnode;
 unsigned int irqno[3];
+struct tasklet_struct tasklet; // 任务队列
 
+/**
+ * @brief    按键中断底半部回调
+ */
+static void tasklet_callback(struct tasklet_struct *tasklet)
+{
+    int i, sum;
+
+    sum = 0;
+    for (i = 1; i <= 100; i++) {
+        sum += i;
+        printk("i = %d, sum = %d\n", i, sum);
+    }
+}
+
+/**
+ * @brief    按键中断回调
+ */
 static irqreturn_t interrupt_handler(int irqno, void *dev_id)
 {
     // dev_id 接收的是 request_irq 传递的第五个参数
@@ -35,9 +52,16 @@ static irqreturn_t interrupt_handler(int irqno, void *dev_id)
         printk("key3 interrupt");
         break;
     }
+
+    // 开启中断底半部
+    tasklet_schedule(&tasklet);
+
     return IRQ_HANDLED;
 }
 
+/**
+ * @brief    初始化设备驱动
+ */
 static int __init my_key_init(void)
 {
     int ret, i;
@@ -61,7 +85,6 @@ static int __init my_key_init(void)
         printk("irq%d found! irqno = %d\n", i, irqno[i]);
 
         // 注册中断号
-        // ret = request_irq(irqno2, interrupt_handler, IRQF_TRIGGER_FALLING, "key2", NULL);
         ret = request_irq(irqno[i], interrupt_handler, IRQF_TRIGGER_FALLING, "key", (void *)i);
         if (ret) {
             printk(KERN_ALERT "request irq%d failed\n", i);
@@ -70,11 +93,20 @@ static int __init my_key_init(void)
         printk("request irq%d success\n", i);
     }
 
+    // 初始化任务队列
+    tasklet_setup(&tasklet, tasklet_callback);
+
     return 0;
 }
 
+/**
+ * @brief    移除设备驱动
+ */
 static void __exit my_key_exit(void)
 {
+    // 注销任务队列
+    tasklet_kill(&tasklet);
+
     int i;
     // 注销中断号
     for (i = 0; i < 3; i++)
