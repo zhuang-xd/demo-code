@@ -109,3 +109,21 @@ make ARCH=arm MODNAME=beep
 现象
 
 ![image-20230712215231429](assets/image-20230712215231429.png)
+
+## 11.platform总线驱动
+
+实验：
+
+- 使用 `int pdrev_probe(struct platform_device *pdev)` 代替（匹配到`struct of_device_id of_table[] `中的设备树就会被调用 ）
+  - `static int __init led_init(void)`
+
+- 使用 `int pdrev_remove(struct platform_device *pdev)` 代替
+  - `static void __exit led_exit(void)`
+
+- 使用宏 `module_platform_driver(pdrev_driver);` 代替
+  - `module_init(led_init);`
+  - `module_exit(led_exit);`
+
+现象
+
+![image-20230713144159428](assets/image-20230713144159428.png)
